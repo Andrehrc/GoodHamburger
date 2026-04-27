@@ -83,7 +83,7 @@ Frontend disponível em `http://localhost:5105/`.
 A documentação da API está disponível em Swagger após iniciar o projeto.
 
 <br />
-<img src="./assets/host.png" />
+<img src="./Assets/host.png" />
 <br />
 
 ## O que ficou de fora
