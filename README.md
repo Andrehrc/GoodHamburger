@@ -27,7 +27,7 @@ API REST em **ASP.NET Core 8** + frontend **Blazor WebAssembly**, com persistên
 
 ## Prepare o ambiente do banco de dados
 4. Certifique-se de ter o Dotnet Ef instalado, que pode ser feito com o comando `dotnet tool install --global dotnet-ef` 
-5. Rode o comando `dotnet ef migrations add InitialCreate --project GoodHamburguer` para gerar migrations 
+5. Rode o comando `dotnet ef migrations add InitialCreate --project GoodHamburger` para gerar migrations 
 6. Se necessário, atualize a string de conexão no arquivo `appsettings.json` para refletir as configurações do seu banco de dados:
   ```json
    "ConnectionStrings": {
