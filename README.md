@@ -31,7 +31,7 @@ API REST em **ASP.NET Core 8** + frontend **Blazor WebAssembly**, com persistên
 6. Se necessário, atualize a string de conexão no arquivo `appsettings.json` para refletir as configurações do seu banco de dados:
   ```json
    "ConnectionStrings": {
-     "DefaultConnection": "Host=localhost;Port=SuaPorta;Database=Boletos;Username=SeuUsuario;Password=SuaSenha"
+     "DefaultConnection": "Host=localhost;Port=SuaPorta;Database=GoodHamburger;Username=SeuUsuario;Password=SuaSenha"
    }
    ```
 
