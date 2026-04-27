@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.37012.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoodHamburguer.Api", "GoodHamburguer\GoodHamburguer.Api.csproj", "{404E4545-8C7D-4EEB-ABF6-0BCADA8D3612}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoodHamburger.Api", "GoodHamburger.Api\GoodHamburger.Api.csproj", "{404E4545-8C7D-4EEB-ABF6-0BCADA8D3612}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoodHamburguer.Models", "GoodHamburguer.Models\GoodHamburguer.Models.csproj", "{C1723C74-B0D4-4103-9C50-0D6BF3323DE2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoodHamburger.Models", "GoodHamburger.Models\GoodHamburger.Models.csproj", "{C1723C74-B0D4-4103-9C50-0D6BF3323DE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoodHamburguer.App", "GoodHamburguer.App\GoodHamburguer.App.csproj", "{F54227D5-92AB-4466-B8D6-FE3DCE46C71B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoodHamburger.App", "GoodHamburger.App\GoodHamburger.App.csproj", "{F54227D5-92AB-4466-B8D6-FE3DCE46C71B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

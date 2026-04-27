@@ -1,0 +1,185 @@
+@page "/orders/{Id:guid}"
+@using GoodHamburger.App.Services
+@using GoodHamburger.Models.DTOs
+@inject OrderApiService Api
+@inject NavigationManager Nav
+
+<PageTitle>Pedido — Good Hamburger</PageTitle>
+
+@if (_order is null)
+{
+    <p>Carregando…</p>
+}
+else
+{
+    <div class="page-header">
+        <h1>Pedido <span class="subtle">#@_order.Id.ToString()[..8]</span></h1>
+        <a href="/orders" class="btn-outline">← Voltar</a>
+    </div>
+
+    @if (!_editing)
+    {
+        <!-- Visualização -->
+        <div class="detail-card">
+            <div class="detail-items">
+                @foreach (var item in _order.Items)
+                {
+                    <div class="detail-item">
+                        <span>@CategoryIcon(item.Category) @item.Name</span>
+                        <span>R$ @item.Price.ToString("F2")</span>
+                    </div>
+                }
+            </div>
+
+            <div class="detail-pricing">
+                <div class="pricing-row">
+                    <span>Subtotal</span>
+                    <span>R$ @_order.Subtotal.ToString("F2")</span>
+                </div>
+                @if (_order.DiscountPercent > 0)
+                {
+                    <div class="pricing-row discount">
+                        <span>Desconto (@_order.DiscountPercent%)</span>
+                        <span>-R$ @_order.DiscountAmount.ToString("F2")</span>
+                    </div>
+                }
+                <div class="pricing-row total">
+                    <strong>Total</strong>
+                    <strong>R$ @_order.Total.ToString("F2")</strong>
+                </div>
+            </div>
+
+            <div class="detail-meta">
+                <small>Criado em: @_order.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</small>
+                @if (_order.UpdatedAt != _order.CreatedAt)
+                {
+                    <small>Atualizado em: @_order.UpdatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</small>
+                }
+            </div>
+
+            <div class="detail-actions">
+                <button class="btn-primary" @onclick="StartEdit">Editar pedido</button>
+                <button class="btn-danger"  @onclick="Delete">Remover pedido</button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Edição -->
+        <h2>Editar itens</h2>
+
+        @if (_menu is not null)
+        {
+            <div class="menu-grid">
+                @foreach (var item in _menu)
+                {
+                    <div class="menu-card @(IsSelected(item.Code) ? "selected" : "")"
+                         @onclick="() => ToggleItem(item)">
+                        <span class="menu-icon">@CategoryIcon(item.Category)</span>
+                        <div class="menu-info">
+                            <strong>@item.Name</strong>
+                            <span class="menu-code">@item.Code</span>
+                        </div>
+                        <span class="menu-price">R$ @item.Price.ToString("F2")</span>
+                        @if (IsSelected(item.Code))
+                        {
+                            <span class="check">✓</span>
+                        }
+                    </div>
+                }
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(_error))
+        {
+            <div class="alert error">@_error</div>
+        }
+
+        <div class="edit-actions">
+            <button class="btn-primary" @onclick="SaveEdit" disabled="@(!_editCodes.Any() || _loading)">
+                @(_loading ? "Salvando…" : "Salvar alterações")
+            </button>
+            <button class="btn-outline" @onclick="CancelEdit">Cancelar</button>
+        </div>
+    }
+}
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+
+    private OrderDto?       _order;
+    private List<MenuItemDto>? _menu;
+    private bool            _editing;
+    private bool            _loading;
+    private string          _error = string.Empty;
+    private List<string>    _editCodes = new();
+
+    protected override async Task OnInitializedAsync() =>
+        _order = await Api.GetOrderAsync(Id);
+
+    private async Task StartEdit()
+    {
+        _menu      = await Api.GetMenuAsync();
+        _editCodes = _order!.Items.Select(i => i.Code).ToList();
+        _editing   = true;
+    }
+
+    private void CancelEdit()
+    {
+        _editing = false;
+        _error   = string.Empty;
+    }
+
+    private bool IsSelected(string code) => _editCodes.Contains(code);
+
+    private void ToggleItem(MenuItemDto item)
+    {
+        if (_editCodes.Contains(item.Code))
+        {
+            _editCodes.Remove(item.Code);
+        }
+        else
+        {
+            var alreadyInCategory = _menu!
+                .Where(m => m.Category == item.Category && _editCodes.Contains(m.Code))
+                .Any();
+
+            if (alreadyInCategory)
+            {
+                _error = $"Você já selecionou um item da categoria {item.Category}.";
+                return;
+            }
+            _editCodes.Add(item.Code);
+        }
+        _error = string.Empty;
+    }
+
+    private async Task SaveEdit()
+    {
+        _loading = true;
+        _error   = string.Empty;
+
+        var (updated, error) = await Api.UpdateOrderAsync(Id, _editCodes);
+
+        _loading = false;
+
+        if (error is not null) { _error = error; return; }
+
+        _order   = updated;
+        _editing = false;
+    }
+
+    private async Task Delete()
+    {
+        await Api.DeleteOrderAsync(Id);
+        Nav.NavigateTo("/orders");
+    }
+
+    private static string CategoryIcon(string category) => category switch
+    {
+        "Sandwich" => "🍔",
+        "Side"     => "🍟",
+        "Drink"    => "🥤",
+        _          => "🍽️"
+    };
+}
