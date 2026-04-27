@@ -1,0 +1,88 @@
+@page "/orders"
+@using GoodHamburger.Models
+@using GoodHamburguer.App.Services
+@using GoodHamburguer.Models.DTOs
+
+@inject OrderApiService Api
+@inject NavigationManager Nav
+
+<PageTitle>Pedidos — Good Hamburger</PageTitle>
+
+<div class="page-header">
+    <h1>Pedidos</h1>
+    <a href="/" class="btn-primary">+ Novo pedido</a>
+</div>
+
+@if (_orders is null)
+{
+    <p>Carregando pedidos…</p>
+}
+else if (!_orders.Any())
+{
+    <div class="empty-state">
+        <span>🍔</span>
+        <p>Nenhum pedido ainda. <a href="/">Faça o primeiro!</a></p>
+    </div>
+}
+else
+{
+    <div class="orders-list">
+        @foreach (var order in _orders)
+        {
+            <div class="order-card">
+                <div class="order-card-header">
+                    <span class="order-id">#@order.Id.ToString()[..8]</span>
+                    <span class="order-date">@order.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</span>
+                </div>
+
+                <div class="order-items">
+                    @foreach (var item in order.Items)
+                    {
+                        <span class="order-item-badge">@CategoryIcon(item.Category) @item.Name</span>
+                    }
+                </div>
+
+                <div class="order-card-footer">
+                    <div class="order-pricing">
+                        <span>Subtotal: R$ @order.Subtotal.ToString("F2")</span>
+                        @if (order.DiscountPercent > 0)
+                        {
+                            <span class="discount">-@order.DiscountPercent% (R$ @order.DiscountAmount.ToString("F2"))</span>
+                        }
+                        <strong>Total: R$ @order.Total.ToString("F2")</strong>
+                    </div>
+                    <div class="order-actions">
+                        <button class="btn-outline" @onclick="() => GoToOrder(order.Id)">Ver</button>                        
+                        <button class="btn-danger" @onclick="() => DeleteOrder(order.Id)">Remover</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<OrderDto>? _orders;
+
+    protected override async Task OnInitializedAsync() =>
+        _orders = await Api.GetOrdersAsync();
+
+    private async Task DeleteOrder(Guid id)
+    {
+        await Api.DeleteOrderAsync(id);
+        _orders = await Api.GetOrdersAsync();
+    }
+
+    private static string CategoryIcon(string category) => category switch
+    {
+        "Sandwich" => "🍔",
+        "Side"     => "🍟",
+        "Drink"    => "🥤",
+        _          => "🍽️"
+    };
+
+    void GoToOrder(Guid id)
+    {
+        Nav.NavigateTo($"/orders/{id}");
+    }
+}
