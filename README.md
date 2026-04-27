@@ -22,7 +22,7 @@ API REST em **ASP.NET Core 8** + frontend **Blazor WebAssembly**, com persistên
 ## Getting started
 
 1. Clone esse repositorio utilizando `git clone https://github.com/Andrehrc/GoodHamburger.git`
-2. Acesse o diterório do projeto: `cd GoodHamburguer`<br />
+2. Acesse o diterório do projeto: `cd GoodHamburger`<br />
 3. Rode `dotnet restore` para instalar as dependências<br />
 
 ## Prepare o ambiente do banco de dados
