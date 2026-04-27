@@ -27,7 +27,7 @@ API REST em **ASP.NET Core 8** + frontend **Blazor WebAssembly**, com persistên
 
 ## Prepare o ambiente do banco de dados
 4. Certifique-se de ter o Dotnet Ef instalado, que pode ser feito com o comando `dotnet tool install --global dotnet-ef` 
-5. Rode o comando `dotnet ef migrations add InitialCreate --project GoodHamburger` para gerar migrations 
+5. Rode o comando `dotnet ef migrations add InitialCreate --project GoodHamburger.Api` para gerar migrations 
 6. Se necessário, atualize a string de conexão no arquivo `appsettings.json` para refletir as configurações do seu banco de dados:
   ```json
    "ConnectionStrings": {
@@ -37,12 +37,11 @@ API REST em **ASP.NET Core 8** + frontend **Blazor WebAssembly**, com persistên
 
 ## Prepare o ambiente de desenvolvimento e execute a aplicação
 7. Caso esteja utilizando Windows, execute o comando `set ASPNETCORE_ENVIRONMENT=Development` para atualizar o ambiente de para desenvolvimento<br />
-8. Caso esteja utilizando Mac ou Linux, execute o comando `ASPNETCORE_ENVIRONMENT=Development dotnet run --project BoletosApi` para atualizar o ambiente de para desenvolvimento e iniciar a aplicação<br />
 
 ### 1. Iniciar a API
 
 ```bash
-cd GoodHamburger
+cd GoodHamburger.Api
 dotnet run
 ```
 
